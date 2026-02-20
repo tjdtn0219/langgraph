@@ -1,0 +1,14 @@
+CREATE DATABASE IF NOT EXISTS langgraph
+DEFAULT CHARACTER SET utf8mb4
+DEFAULT COLLATE utf8mb4_unicode_ci;
+
+USE langgraph;
+
+CREATE TABLE IF NOT EXISTS Doc (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    from_date DATE NOT NULL,
+    to_date DATE NOT NULL,
+    manager VARCHAR(255) NOT NULL
+);

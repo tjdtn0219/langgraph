@@ -6,6 +6,9 @@ import java.util.Map;
 
 public final class MySqlClient implements DbClient {
 
+    // 의존성 주입받는 쪽에서 따로 구현체 구현해서 사용하는 방법도 가능
+    // 즉 DBClient를 상속받아 구현
+
     @Override
     public int executeUpdate(String sql, List<Object> params) {
         // TODO: JDBC 구현 예정
