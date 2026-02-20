@@ -12,6 +12,7 @@ import koscom.infra.langgraphj.diagram.ConsoleDiagramPrinter;
 import koscom.infra.langgraphj.io.ai.AiClient;
 import koscom.infra.langgraphj.io.ai.GptClient;
 import koscom.infra.langgraphj.io.db.DbClient;
+import koscom.infra.langgraphj.io.db.Doc;
 import koscom.infra.langgraphj.io.db.MySqlClient;
 import koscom.infra.langgraphj.runtime.DebugPrintHook;
 import koscom.infra.langgraphj.runtime.ExecutionContext;
@@ -22,7 +23,7 @@ public class Main {
     // State Key들을 “미리 결정” (요구사항)
     private static final String K_PROMPT = "prompt";
     private static final String K_NAME_CANDIDATE = "nameCandidate";
-    private static final String K_NAME = "name";
+    private static final String K_NAME = "Manager";
     private static final String K_ROUTE_VALID = "route.validName";
     private static final String K_QUERY_RESULT = "queryResult";
     private static final String K_FINAL_PROMPT = "finalPrompt";
@@ -30,11 +31,16 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
+        // ✅ DbClient: 실제 JDBC 연결/쿼리 실행은 추후 구현 예정
+        String url = "jdbc:mysql://localhost:3307/langgraph?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true";
+        DbClient dbClient = new MySqlClient(url, "languser", "langpw");
+
+//        String sql = "SELECT * FROM Doc";
+//        List<Object> params = List.of();
+//        dbClient.executeQuery(sql, params);
+
         // ✅ AiClient: 실제 OpenAI 호출은 추후 구현 예정
         AiClient aiClient = new GptClient();
-
-        // ✅ DbClient: 실제 JDBC 연결/쿼리 실행은 추후 구현 예정
-        DbClient dbClient = new MySqlClient();
 
         ExecutionContext ctx = new ExecutionContext(aiClient, dbClient, new DebugPrintHook());
 
@@ -73,7 +79,7 @@ public class Main {
         // ---- Node 3) DB Query: SELECT ... WHERE NAME = state.get(name)
         DbQueryNode dbQuery = new DbQueryNode(
                 "db_query",
-                "SELECT * FROM SCHEDULE WHERE NAME = ?",
+                "SELECT * FROM Doc WHERE manager LIKE CONCAT('%', ?, '%')",
                 List.of(K_NAME),
                 K_QUERY_RESULT
         );

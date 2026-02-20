@@ -1,6 +1,7 @@
 package koscom.infra.langgraphj.core.node;
 
 import koscom.infra.langgraphj.core.state.State;
+import koscom.infra.langgraphj.io.db.Doc;
 import koscom.infra.langgraphj.runtime.ExecutionContext;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public final class DbQueryNode implements Node {
         }
 
         // ✅ 실제 JDBC Connection / PreparedStatement 로직은 DbClient 내부에서 추후 구현 예정
-        List<Map<String, Object>> rows = ctx.db().executeQuery(sql, params);
+        List<Doc> rows = ctx.db().executeQuery(sql, params);
 
         if (rows != null && !rows.isEmpty()) {
             // 여기서는 단순히 rows.toString()으로 저장(실제론 JSON 직렬화 등을 붙일 수 있음)
